@@ -6,7 +6,7 @@ import {
   Star, Play, ArrowUp, Rocket, PieChart, Calendar, 
   Mail, Phone, MapPin, Linkedin, Twitter, Github,
   ExternalLink, Send, Loader2, Building2, Briefcase, TrendingUp, CheckCircle2,
-  Target 
+  Target, Smartphone, Palette 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import logo from "../Images/Logo/logo.png";
@@ -705,12 +705,46 @@ const AnnouncementBanner = ({ onClose }) => (
 // 🧭 NAVBAR (MOVED OUTSIDE - Key Fix!)
 // ============================================
 
+// ============================================
+// 🧭 NAVBAR (Updated with Services Dropdown)
+// ============================================
+
 const navItems = [
-  { label: 'Services', href: '/ServicesPage', isRoute: true },
   { label: 'CRM', href: '/crm', isRoute: true },
   { label: 'AI Chatbot', href: '#chatbot', isRoute: false },
   { label: 'Pricing', href: '#pricing', isRoute: false },
 ];
+
+// Services dropdown items
+const serviceItems = [
+  { 
+    label: 'Web Development', 
+    href: '/services/web-development', 
+    icon: Globe,
+    description: 'Custom websites & web apps'
+  },
+  { 
+    label: 'App Development', 
+    href: '/services/app-development', 
+    icon: Smartphone,
+    description: 'iOS & Android applications'
+  },
+  { 
+    label: 'Digital Marketing', 
+    href: '/services/digital-marketing', 
+    icon: TrendingUp,
+    description: 'SEO, PPC & social media'
+  },
+  { 
+    label: 'Graphic Design', 
+    href: '/services/graphic-design', 
+    icon: Palette,
+    description: 'Branding & visual identity'
+  },
+];
+
+// Resources dropdown items
+const resourceItems = ['Blog', 'Documentation', 'Help Center', 'API Reference'];
 
 const Navbar = ({ 
   isScrolled, 
@@ -721,6 +755,9 @@ const Navbar = ({
   navigate,
   handleNavClick 
 }) => {
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+
   return (
     <motion.nav 
       initial={{ y: -100 }}
@@ -735,6 +772,7 @@ const Navbar = ({
       {showBanner && !isScrolled && <AnnouncementBanner onClose={() => setShowBanner(false)} />}
       
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Logo */}
         <motion.div 
           className="flex items-center gap-2 cursor-pointer group"
           onClick={() => navigate('/')}
@@ -747,7 +785,85 @@ const Navbar = ({
           />
         </motion.div>
         
+        {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
+          
+          {/* ✨ Services Dropdown */}
+          <div 
+            className="relative group"
+            onMouseEnter={() => setServicesOpen(true)}
+            onMouseLeave={() => setServicesOpen(false)}
+          >
+            <button className="text-sm font-medium text-slate-600 hover:text-[#17C3B2] flex items-center gap-1 transition-colors py-2">
+              Services
+              <motion.div
+                animate={{ rotate: servicesOpen ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDown size={14} />
+              </motion.div>
+            </button>
+            
+            {/* Services Dropdown Menu */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ 
+                opacity: servicesOpen ? 1 : 0, 
+                y: servicesOpen ? 0 : 10,
+                scale: servicesOpen ? 1 : 0.95
+              }}
+              transition={{ duration: 0.2 }}
+              className={`absolute top-full left-0 pt-2 ${servicesOpen ? 'visible' : 'invisible'}`}
+            >
+              <div className="bg-white rounded-xl shadow-xl border border-slate-200 p-2 min-w-[280px]">
+                {serviceItems.map((item, index) => (
+                  <motion.a
+                    key={item.label}
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(item.href);
+                      setServicesOpen(false);
+                    }}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#17C3B2]/5 transition-colors group/item"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-[#0D2342]/5 flex items-center justify-center group-hover/item:bg-[#17C3B2] group-hover/item:text-white transition-colors flex-shrink-0">
+                      <item.icon size={20} className="text-[#0D2342] group-hover/item:text-white" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-[#0D2342] text-sm group-hover/item:text-[#17C3B2] transition-colors">
+                        {item.label}
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {item.description}
+                      </div>
+                    </div>
+                  </motion.a>
+                ))}
+                
+                {/* View All Services Link */}
+                <div className="border-t border-slate-100 mt-2 pt-2">
+                  <a
+                    href="/services"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/services');
+                      setServicesOpen(false);
+                    }}
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-[#0D2342]/5 transition-colors text-sm font-medium text-[#0D2342]"
+                  >
+                    View All Services
+                    <ArrowRight size={14} className="text-[#17C3B2]" />
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Other Nav Items */}
           {navItems.map((item, i) => (
             <motion.a 
               key={item.label} 
@@ -763,6 +879,7 @@ const Navbar = ({
             </motion.a>
           ))}
           
+          {/* Resources Dropdown */}
           <div className="relative group">
             <button className="text-sm font-medium text-slate-600 hover:text-[#17C3B2] flex items-center gap-1 transition-colors">
               Resources
@@ -770,8 +887,12 @@ const Navbar = ({
             </button>
             
             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-              <div className="bg-white rounded-lg shadow-xl border border-slate-200 py-2 min-w-[160px]">
-                {['Blog', 'Documentation', 'Help Center', 'API Reference'].map(item => (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-lg shadow-xl border border-slate-200 py-2 min-w-[160px]"
+              >
+                {resourceItems.map(item => (
                   <a 
                     key={item} 
                     href="/" 
@@ -780,11 +901,12 @@ const Navbar = ({
                     {item}
                   </a>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
 
+        {/* Desktop CTA Buttons */}
         <div className="hidden lg:flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={() => navigate('/login')}>
             Sign In
@@ -795,6 +917,7 @@ const Navbar = ({
           </Button>
         </div>
 
+        {/* Mobile Menu Button */}
         <button 
           className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors text-[#0D2342]" 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -803,6 +926,7 @@ const Navbar = ({
         </button>
       </div>
 
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <motion.div 
           initial={{ opacity: 0, height: 0 }}
@@ -811,6 +935,52 @@ const Navbar = ({
           className="lg:hidden bg-white border-t border-slate-100 shadow-lg"
         >
           <div className="px-6 py-4 space-y-1">
+            
+            {/* Mobile Services Dropdown */}
+            <div className="border-b border-slate-100 pb-2 mb-2">
+              <button 
+                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                className="w-full flex items-center justify-between py-2.5 text-slate-600 text-sm font-medium"
+              >
+                Services
+                <motion.div
+                  animate={{ rotate: mobileServicesOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown size={16} />
+                </motion.div>
+              </button>
+              
+              <motion.div
+                initial={false}
+                animate={{ 
+                  height: mobileServicesOpen ? 'auto' : 0,
+                  opacity: mobileServicesOpen ? 1 : 0
+                }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="pl-4 space-y-1 pb-2">
+                  {serviceItems.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate(item.href);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex items-center gap-3 py-2.5 text-slate-500 hover:text-[#17C3B2] text-sm"
+                    >
+                      <item.icon size={16} />
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Other Mobile Nav Items */}
             {navItems.map(item => (
               <a 
                 key={item.label} 
@@ -821,6 +991,16 @@ const Navbar = ({
                 {item.label}
               </a>
             ))}
+            
+            {/* Mobile Resources */}
+            <a 
+              href="/resources"
+              className="block py-2.5 text-slate-600 hover:text-[#17C3B2] text-sm font-medium"
+            >
+              Resources
+            </a>
+            
+            {/* Mobile CTA Buttons */}
             <div className="pt-4 space-y-2 border-t border-slate-100 mt-4">
               <Button variant="outline" className="w-full" size="sm" onClick={() => navigate('/login')}>
                 Sign In
