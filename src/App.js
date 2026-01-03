@@ -7,6 +7,8 @@ import ForgotPassword from './Pages/ForgotPassword';
 import WebDevelopmentPage from './Services/WebDevelopmentPage';
 import AppDevelopmentPage from './Services/AppDevelopmentPage';
 import Preloader from './components/Preloader';
+import DigitalMarketingPage from './Services/DigitalMarketingPage';
+import GraphicDesignPage from './Services/GraphicDesignPage';
 // Placeholder components for the routes defined in your Navbar
 
 function App() {
@@ -24,7 +26,8 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/services/web-development" element={<WebDevelopmentPage />} />
         <Route path="/services/app-development" element={<AppDevelopmentPage />} />
-       
+        <Route path="/services/graphic-design" element={<GraphicDesignPage />} />
+        <Route path="/services/digital-marketing" element={<DigitalMarketingPage />} />
        </Routes>
      
     </Router>
